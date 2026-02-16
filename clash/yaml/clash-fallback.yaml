@@ -539,6 +539,11 @@ dns:
     - tls://1.1.1.1
     - tls://8.8.8.8
 
+  # 代理服务器 DNS
+  proxy-server-nameserver:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+
   # 性能关键：域名级精准分流
   nameserver-policy:
     "geosite:cn":
