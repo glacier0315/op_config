@@ -57,98 +57,15 @@ external-controller: 127.0.0.1:9090
 secret: "2v6Wc@WSjVKQ!$fA"
 
 # =========================
-# TUN 强制接管模式
-# =========================
-tun:
-  enable: false
-  stack: gvisor
-  device: utun
-  endpoint-independent-nat: true
-  auto-route: false
-  auto-detect-interface: false
-  auto-redirect: false
-  strict-route: false
-  dns-hijack:
-    - any:53
-
-# =========================
-# DNS 极限防泄露配置
-# =========================
-dns:
-  enable: true
-  prefer-h3: false
-  ipv6: false
-  use-hosts: true
-  use-system-hosts: false
-
-  listen: 127.0.0.1:7874
-  enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16
-  fake-ip-filter-mode: blacklist
-  fake-ip-ttl: 300
-
-  fake-ip-filter:
-    # 局域网域名
-    - "*.lan"
-    - "*.local"
-    - "*.localdomain"
-    - "*.home.arpa"
-    # QQ 本地认证
-    - "localhost.ptlogin2.qq.com"
-    - "localhost.sec.qq.com"
-    # STUN
-    - "stun.*"
-    # NTP / 时间同步
-    - "time.*"
-    - "*.ntp.org"
-    - "*.ntp.org.cn"
-    - "*.time.edu.cn"
-    # Microsoft 连通性检测
-    - "*.msftconnecttest.com"
-    - "*.msftncsi.com"
-    # 你的自定义域
-    - "*.glacier.top"
-    # 机场
-    - "*.ali66mysql.com"
-  default-nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-  nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-  fallback:
-    - https://1.1.1.1/dns-query
-    - https://8.8.8.8/dns-query
-    - tls://1.1.1.1
-    - tls://8.8.8.8
-  fallback-filter:
-    geoip: true
-    geoip-code: CN
-    ipcidr:
-      - 240.0.0.0/4
-      - 0.0.0.0/32
-
-  respect-rules: true
-  proxy-server-nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-  nameserver-policy:
-    "geosite:cn":
-      - https://dns.alidns.com/dns-query
-      - https://doh.pub/dns-query
-    "geosite:geolocation-!cn":
-      - https://1.1.1.1/dns-query
-      - https://8.8.8.8/dns-query
-
-  cache-algorithm: arc
-  cache-max-size: 8192
-
-# =========================
 # 端口监听配置（可选）
+# 例如：
+#  - Steam 强制美区
+#  - TikTok 强制台湾
+#  - ChatGPT 强制美国
 # =========================
 # listeners:
-#   - {name: mixed0, type: mixed, port: 42000, proxy: 台湾-故转}
-#   - {name: mixed1, type: mixed, port: 42001, proxy: 美国-故转}
+#   - { name: mixed0, type: mixed, port: 42000, proxy: 台湾-故转 }
+#   - { name: mixed1, type: mixed, port: 42001, proxy: 美国-故转 }
 
 # =========================
 # 配置文件管理
@@ -545,3 +462,96 @@ rule-providers:
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs
     path: ./ruleset/telegram.mrs
     interval: 86400
+
+# =========================
+# TUN 强制接管模式
+# =========================
+tun:
+  enable: false
+  stack: gvisor
+  device: utun
+  endpoint-independent-nat: true
+  auto-route: false
+  auto-detect-interface: false
+  auto-redirect: false
+  strict-route: false
+  dns-hijack:
+    - any:53
+
+# =========================
+# DNS 极限防泄露配置
+# =========================
+dns:
+  enable: true
+  prefer-h3: false
+  ipv6: false
+  use-hosts: true
+  use-system-hosts: false
+  respect-rules: true
+
+  cache-algorithm: arc
+  cache-max-size: 8192
+
+  listen: 127.0.0.1:7874
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-ttl: 300
+
+  fake-ip-filter:
+    # 局域网域名
+    - "*.lan"
+    - "*.local"
+    - "*.localdomain"
+    - "*.home.arpa"
+    # QQ 本地认证
+    - "localhost.ptlogin2.qq.com"
+    - "localhost.sec.qq.com"
+    # STUN
+    - "stun.*"
+    # NTP / 时间同步
+    - "time.*"
+    - "*.ntp.org"
+    - "*.ntp.org.cn"
+    - "*.time.edu.cn"
+    # Microsoft 连通性检测
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    # 你的自定义域
+    - "*.glacier.top"
+    # 机场
+    - "*.ali66mysql.com"
+
+  # 启动阶段解析
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+
+  # 主 DNS（国内）
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
+  # 国外 DNS
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+    - tls://1.1.1.1
+    - tls://8.8.8.8
+
+  # 性能关键：域名级精准分流
+  nameserver-policy:
+    "geosite:cn":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+    "geosite:geolocation-!cn":
+      - https://1.1.1.1/dns-query
+      - https://8.8.8.8/dns-query
+
+  # fallback 仅作为保险
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+      - 0.0.0.0/32
