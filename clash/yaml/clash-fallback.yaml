@@ -245,7 +245,7 @@ proxy-groups:
 # =========================
 rules:
   # 直连域名
-  - DOMAIN,glacier.top,DIRECT
+  - DOMAIN-SUFFIX,glacier.top,DIRECT
   # 私有网络最高优先
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,test_domain,🧬 TEST
@@ -539,10 +539,10 @@ dns:
     - tls://1.1.1.1
     - tls://8.8.8.8
 
-  # 代理服务器 DNS
+  # 解析 代理服务器域名
   proxy-server-nameserver:
-    - https://1.1.1.1/dns-query
-    - https://8.8.8.8/dns-query
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
 
   # 性能关键：域名级精准分流
   nameserver-policy:
@@ -552,6 +552,8 @@ dns:
     "geosite:geolocation-!cn":
       - https://1.1.1.1/dns-query
       - https://8.8.8.8/dns-query
+      - tls://1.1.1.1
+      - tls://8.8.8.8
 
   # fallback 仅作为保险
   fallback-filter:
