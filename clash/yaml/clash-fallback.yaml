@@ -253,7 +253,7 @@ geox-url:
 # 规则集获取
 # =========================
 rule-providers:
-  test_domain:
+  test:
     type: http
     behavior: classical
     format: text
@@ -427,30 +427,9 @@ rule-providers:
 rules:
   # 直连域名
   - DOMAIN-SUFFIX,glacier.top,DIRECT
-  # ====== 强化中国大陆直连优化 ======
-  - DOMAIN-SUFFIX,baidu.com,DIRECT
-  - DOMAIN-SUFFIX,baidupcs.com,DIRECT
-  - DOMAIN-SUFFIX,bdstatic.com,DIRECT
-  - DOMAIN-SUFFIX,alicdn.com,DIRECT
-  - DOMAIN-SUFFIX,taobao.com,DIRECT
-  - DOMAIN-SUFFIX,tmall.com,DIRECT
-  - DOMAIN-SUFFIX,jd.com,DIRECT
-  - DOMAIN-SUFFIX,360.cn,DIRECT
-  - DOMAIN-SUFFIX,tencent.com,DIRECT
-  - DOMAIN-SUFFIX,qq.com,DIRECT
-  - DOMAIN-SUFFIX,wechat.com,DIRECT
-  - DOMAIN-SUFFIX,gtimg.com,DIRECT
-  - DOMAIN-SUFFIX,bilibili.com,DIRECT
-  - DOMAIN-SUFFIX,iqiyi.com,DIRECT
-  - DOMAIN-SUFFIX,youku.com,DIRECT
-  - DOMAIN-SUFFIX,mgtv.com,DIRECT
-  - DOMAIN-SUFFIX,163.com,DIRECT
-  - DOMAIN-SUFFIX,sina.com.cn,DIRECT
-  - DOMAIN-SUFFIX,csdn.net,DIRECT
-  - DOMAIN-SUFFIX,zhihu.com,DIRECT
   # 私有网络最高优先
   - RULE-SET,private,🏠 私有网络,no-resolve
-  - RULE-SET,test_domain,🧬 TEST
+  - RULE-SET,test,🧬 TEST
   - RULE-SET,tiktok,🎬 TikTok # TikTok 域名 优先走代理
   - RULE-SET,cn,🔒 国内服务,no-resolve # 中国 IP 优先直连
   - RULE-SET,geolocation-cn,🔒 国内服务 # 中国域名直连
