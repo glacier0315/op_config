@@ -5,7 +5,7 @@ proxy-providers:
   # 机场名称
   sub1:
     # 机场订阅地址
-    url: http://xxxx/sub1
+    url: https://your-subscribe.example.com/sub1?token=xxxxx
     type: http
     path: ./providers/sub1.yaml
     interval: 86400
@@ -21,7 +21,7 @@ proxy-providers:
     proxy: 直连
     exclude-filter: "(?i)(过期时间)|(剩余流量)|(TG群)|(官网)"
   sub2:
-    url: http://xxxx/sub2
+    url: https://your-subscribe.example.com/sub2?token=xxxxx
     type: http
     path: ./providers/sub2.yaml
     interval: 86400
