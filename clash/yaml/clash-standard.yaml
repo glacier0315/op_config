@@ -743,7 +743,7 @@ dns:
 
   # 性能关键：域名级精准分流
   nameserver-policy:
-    "geosite:cn":
+    "geosite:cn,private":
       - https://dns.alidns.com/dns-query
       - https://doh.pub/dns-query
     "geosite:geolocation-!cn":
