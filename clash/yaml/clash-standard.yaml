@@ -1,37 +1,41 @@
 # =========================
 # 代理订阅
 # =========================
+### 节点池配置
+ProxyProvidersSet: &ProxyProvidersSet
+  type: http
+  proxy: DIRECT
+  interval: 86400
+  health-check:
+    enable: true
+    url: "https://www.gstatic.com/generate_204"
+    interval: 600
+  override:
+    udp: true
+    additional-prefix: ""
+    skip-cert-verify: true
+  exclude-filter: "(?i)(过期时间)|(剩余流量)|(TG群)|(官网)"
+
 proxy-providers:
   # 机场名称
   sub1:
     # 机场订阅地址
     url: https://your-subscribe.example.com/sub1?token=xxxxx
-    type: http
-    path: ./providers/sub1.yaml
-    interval: 86400
+    path: "./proxy_provider/sub1.yaml"
+    <<: *ProxyProvidersSet
+    override:
+      additional-prefix: "sub1-"
     # 订阅节点的 User-Agent
     header:
       User-Agent:
         - passwall
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-      lazy: true
-    proxy: 直连
-    exclude-filter: "(?i)(过期时间)|(剩余流量)|(TG群)|(官网)"
   sub2:
+    # 机场订阅地址
     url: https://your-subscribe.example.com/sub2?token=xxxxx
-    type: http
-    path: ./providers/sub2.yaml
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-      lazy: true
-    proxy: 直连
-    exclude-filter: "(?i)(过期时间)|(剩余流量)|(TG群)|(官网)"
+    path: "./proxy_provider/sub2.yaml"
+    <<: *ProxyProvidersSet
+    override:
+      additional-prefix: "sub2-"
 
 # =========================
 # 基础配置
@@ -78,13 +82,13 @@ proxies:
     type: reject
 
   # # 链式代理
-  # - name: 链式出口1
+  # - name: 🚀 链式出口
   #   type: socks5
   #   server:
   #   port:
   #   username:
   #   password:
-  #   dialer-proxy: 香港-故转
+  #   dialer-proxy: 🚀 香港
 
 # =========================
 # 代理组配置
@@ -93,6 +97,49 @@ proxies:
 # - use: [订阅1, 订阅2, 订阅3, 订阅4, 订阅5] 包含订阅节点
 # - domain-strategy: ipv4-only 强制仅使用 IPv4
 # =========================
+
+### 策略组基础配置
+Select: &Select
+  type: select
+  url: "https://www.gstatic.com/generate_204"
+  disable-udp: false
+  hidden: false
+  include-all: true
+
+UrlTest: &UrlTest
+  type: url-test
+  url: "https://www.gstatic.com/generate_204"
+  interval: 180
+  lazy: true
+  tolerance: 50
+  timeout: 2000
+  disable-udp: false
+  max-failed-times: 3
+  hidden: true
+  include-all: true
+
+FallBack: &FallBack
+  type: fallback
+  url: "https://www.gstatic.com/generate_204"
+  interval: 180
+  lazy: true
+  timeout: 2000
+  disable-udp: false
+  max-failed-times: 3
+  hidden: true
+  include-all: true
+
+LoadBalance: &LoadBalance
+  type: load-balance
+  url: "https://www.gstatic.com/generate_204"
+  interval: 180
+  lazy: true
+  disable-udp: false
+  strategy: consistent-hashing
+  timeout: 2000
+  max-failed-times: 3
+  hidden: true
+  include-all: true
 
 proxy-groups:
   - name: 🚀 节点选择
@@ -106,20 +153,17 @@ proxy-groups:
       - 🚀 新加坡
       - 🚀 美国
       - 🚀 其他
+      # - 🚀 链式出口
       - 直连
       - 拒绝
 
   - name: ⚡ 自动选择
-    type: url-test
-    url: https://www.gstatic.com/generate_204
-    include-all: true
-    interval: 300
+    <<: *UrlTest
+    hidden: false
     filter: ^((?!(直连|拒绝)).)*$
-    lazy: false
 
   - name: 🖐️ 手动切换
-    type: select
-    include-all: true
+    <<: *Select
     filter: ^((?!(直连|拒绝)).)*$
 
   - type: select
@@ -134,6 +178,7 @@ proxy-groups:
       - 🚀 新加坡
       - 🚀 美国
       - 🚀 其他
+      # - 🚀 链式出口
       - 直连
       - 拒绝
 
@@ -168,6 +213,9 @@ proxy-groups:
     name: 🍏 苹果服务
     proxies: *node-select-proxies
   - type: select
+    name: 🌐 TikTok
+    proxies: *node-select-proxies
+  - type: select
     name: 🌐 社交媒体
     proxies: *node-select-proxies
   - type: select
@@ -194,15 +242,16 @@ proxy-groups:
 
   # 香港组
   - name: 🚀 香港
-    type: select
-    include-all: true
+    <<: *LoadBalance
+    hidden: false
     filter: "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
 
   # 台湾组
   - name: 🚀 台湾
-    type: select
-    include-all: true
+    <<: *FallBack
+    hidden: false
     filter: "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan)).*$"
+    exclude-filter: "(?=.*(台湾3)).*$"
 
   # 日本组
   - name: 🚀 日本
@@ -212,9 +261,10 @@ proxy-groups:
 
   # 新加坡组
   - name: 🚀 新加坡
-    type: select
-    include-all: true
+    <<: *LoadBalance
+    hidden: false
     filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
+    exclude-filter: "(?=.*(新加坡1|VIP1)).*$"
 
   # 美国组
   - name: 🚀 美国
@@ -277,14 +327,6 @@ rule-providers:
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/youtube.yaml
     path: ./ruleset/youtube.yaml
     interval: 86400
-  google:
-    type: http
-    format: yaml
-    behavior: ipcidr
-    url: >-
-      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/google.yaml
-    path: ./ruleset/google.yaml
-    interval: 86400
   geolocation-cn:
     type: http
     format: yaml
@@ -292,14 +334,6 @@ rule-providers:
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-cn.yaml
     path: ./ruleset/geolocation-cn.yaml
-    interval: 86400
-  cn:
-    type: http
-    format: yaml
-    behavior: ipcidr
-    url: >-
-      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.yaml
-    path: ./ruleset/cn.yaml
     interval: 86400
   github:
     type: http
@@ -589,13 +623,22 @@ rule-providers:
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-!cn.yaml
     path: ./ruleset/geolocation-!cn.yaml
     interval: 86400
+
   private:
     type: http
     format: yaml
     behavior: ipcidr
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.yaml
-    path: ./ruleset/private.yaml
+    path: ./ruleset/ipcidr/private.yaml
+    interval: 86400
+  google:
+    type: http
+    format: yaml
+    behavior: ipcidr
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/google.yaml
+    path: ./ruleset/ipcidr/google.yaml
     interval: 86400
   telegram:
     type: http
@@ -603,7 +646,15 @@ rule-providers:
     behavior: ipcidr
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.yaml
-    path: ./ruleset/telegram.yaml
+    path: ./ruleset/ipcidr/telegram.yaml
+    interval: 86400
+  cn:
+    type: http
+    format: yaml
+    behavior: ipcidr
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.yaml
+    path: ./ruleset/ipcidr/cn.yaml
     interval: 86400
 
 # =========================
@@ -615,7 +666,9 @@ rules:
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🔒 国内服务
   - RULE-SET,cn,🔒 国内服务,no-resolve
+
   - RULE-SET,category-ai-!cn,💬 AI 服务
+  - RULE-SET,tiktok,🌐 TikTok
   - RULE-SET,bilibili,📺 哔哩哔哩
   - RULE-SET,google,🔍 谷歌服务,no-resolve
   - RULE-SET,youtube,📹 油管视频
@@ -627,7 +680,6 @@ rules:
   - RULE-SET,facebook,🌐 社交媒体
   - RULE-SET,instagram,🌐 社交媒体
   - RULE-SET,twitter,🌐 社交媒体
-  - RULE-SET,tiktok,🌐 社交媒体
   - RULE-SET,linkedin,🌐 社交媒体
 
   - RULE-SET,netflix,🎬 流媒体
