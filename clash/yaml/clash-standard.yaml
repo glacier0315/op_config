@@ -660,17 +660,16 @@ rules:
 
   - RULE-SET,geolocation-!cn,🌐 非中国,no-resolve
   - MATCH,🐟 漏网之鱼
+
 # =========================
 # TUN 强制接管模式
 # =========================
 tun:
   enable: true
   stack: gvisor
-  device: utun
-  endpoint-independent-nat: true
-  auto-route: false
-  auto-detect-interface: false
-  auto-redirect: false
+  auto-route: true
+  auto-detect-interface: true
+  auto-redirect: true
   strict-route: false
   dns-hijack:
     - any:53
@@ -691,7 +690,7 @@ dns:
 
   listen: 127.0.0.1:7874
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.0/16
+  fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-ttl: 300
 
@@ -715,7 +714,7 @@ dns:
     - "*.msftconnecttest.com"
     - "*.msftncsi.com"
     # 你的自定义域
-    - "*.glacier.top"
+    - "+.glacier.top"
     # 机场
     - "*.ali66mysql.com"
 
@@ -723,6 +722,7 @@ dns:
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
+    - 8.8.8.8
 
   # 主 DNS（国内）
   nameserver:
