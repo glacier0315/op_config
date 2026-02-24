@@ -460,7 +460,7 @@ rules:
 # TUN 强制接管模式
 # =========================
 tun:
-  enable: false
+  enable: true
   stack: gvisor
   device: utun
   endpoint-independent-nat: true
