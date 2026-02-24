@@ -1,0 +1,801 @@
+# =========================
+# 代理订阅
+# =========================
+proxy-providers:
+  # 机场名称
+  sub1:
+    # 机场订阅地址
+    url: https://your-subscribe.example.com/sub1?token=xxxxx
+    type: http
+    path: ./providers/sub1.yaml
+    interval: 86400
+    # 订阅节点的 User-Agent
+    header:
+      User-Agent:
+        - passwall
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      lazy: true
+    proxy: 直连
+    exclude-filter: "(?i)(过期时间)|(剩余流量)|(TG群)|(官网)"
+  sub2:
+    url: https://your-subscribe.example.com/sub2?token=xxxxx
+    type: http
+    path: ./providers/sub2.yaml
+    interval: 86400
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+      lazy: true
+    proxy: 直连
+    exclude-filter: "(?i)(过期时间)|(剩余流量)|(TG群)|(官网)"
+
+# =========================
+# 基础配置
+# =========================
+mixed-port: 7890
+allow-lan: true
+# Clash 路由工作模式
+# rule: 基于规则的数据包路由
+# global: 所有数据包将被转发到单个节点
+# direct: 直接将数据包转发到互联网
+mode: rule
+ipv6: false
+log-level: warning
+tcp-concurrent: true
+
+# =========================
+# 外部控制器配置
+# =========================
+external-controller: 0.0.0.0:9090
+secret: "2v6Wc@WSjVKQ!$fA"
+
+# =========================
+# 端口监听配置（可选）
+# 例如：
+#  - Steam 强制美区
+#  - TikTok 强制台湾
+#  - ChatGPT 强制美国
+# =========================
+# listeners:
+#   - { name: mixed0, type: mixed, port: 42000, proxy: 台湾-故转 }
+#   - { name: mixed1, type: mixed, port: 42001, proxy: 美国-故转 }
+
+# =========================
+# 配置文件管理
+# =========================
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+proxies:
+  - name: 直连
+    type: direct
+  - name: 拒绝
+    type: reject
+
+  # # 链式代理
+  # - name: 链式出口1
+  #   type: socks5
+  #   server:
+  #   port:
+  #   username:
+  #   password:
+  #   dialer-proxy: 香港-故转
+
+# =========================
+# 代理组配置
+# =========================
+# - include-all-proxies: true  包含手动节点
+# - use: [订阅1, 订阅2, 订阅3, 订阅4, 订阅5] 包含订阅节点
+# - domain-strategy: ipv4-only 强制仅使用 IPv4
+# =========================
+
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - name: ⚡ 自动选择
+    type: url-test
+    url: https://www.gstatic.com/generate_204
+    include-all: true
+    interval: 300
+    filter: ^((?!(直连|拒绝)).)*$
+    lazy: false
+  - name: 🖐️ 手动切换
+    type: select
+    include-all: true
+    filter: ^((?!(直连|拒绝)).)*$
+
+  - type: select
+    name: 🛑 广告拦截
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+
+  - type: select
+    name: 💬 AI 服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 📺 哔哩哔哩
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 📹 油管视频
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🔍 谷歌服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🏠 私有网络
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🔒 国内服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 📲 电报消息
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🐱 Github
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: Ⓜ️ 微软服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🍏 苹果服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🌐 社交媒体
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🎬 流媒体
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🎮 游戏平台
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 📚 教育资源
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 💰 金融服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: ☁️ 云服务
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🌐 非中国
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+  - type: select
+    name: 🐟 漏网之鱼
+    proxies:
+      - 🚀 节点选择
+      - ⚡ 自动选择
+      - 🖐️ 手动切换
+      - 直连
+      - 拒绝
+
+# =========================
+# Geo 数据获取
+# =========================
+geodata-mode: true
+geo-auto-update: true
+geodata-loader: standard
+geo-update-interval: 24
+geox-url:
+  geoip: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
+  geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
+  mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
+  asn: https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb
+
+# =========================
+# 规则集获取
+# =========================
+rule-providers:
+  category-ads-all:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ads-all.mrs
+    path: ./ruleset/category-ads-all.mrs
+    interval: 86400
+  category-ai-!cn:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs
+    path: ./ruleset/category-ai-!cn.mrs
+    interval: 86400
+  bilibili:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/bilibili.mrs
+    path: ./ruleset/bilibili.mrs
+    interval: 86400
+  youtube:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/youtube.mrs
+    path: ./ruleset/youtube.mrs
+    interval: 86400
+  google:
+    type: http
+    format: mrs
+    behavior: ipcidr
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/google.mrs
+    path: ./ruleset/google.mrs
+    interval: 86400
+  geolocation-cn:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-cn.mrs
+    path: ./ruleset/geolocation-cn.mrs
+    interval: 86400
+  cn:
+    type: http
+    format: mrs
+    behavior: ipcidr
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.mrs
+    path: ./ruleset/cn.mrs
+    interval: 86400
+  github:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/github.mrs
+    path: ./ruleset/github.mrs
+    interval: 86400
+  gitlab:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/gitlab.mrs
+    path: ./ruleset/gitlab.mrs
+    interval: 86400
+  microsoft:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.mrs
+    path: ./ruleset/microsoft.mrs
+    interval: 86400
+  apple:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/apple.mrs
+    path: ./ruleset/apple.mrs
+    interval: 86400
+  facebook:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/facebook.mrs
+    path: ./ruleset/facebook.mrs
+    interval: 86400
+  instagram:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/instagram.mrs
+    path: ./ruleset/instagram.mrs
+    interval: 86400
+  twitter:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/twitter.mrs
+    path: ./ruleset/twitter.mrs
+    interval: 86400
+  tiktok:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/tiktok.mrs
+    path: ./ruleset/tiktok.mrs
+    interval: 86400
+  linkedin:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/linkedin.mrs
+    path: ./ruleset/linkedin.mrs
+    interval: 86400
+  netflix:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/netflix.mrs
+    path: ./ruleset/netflix.mrs
+    interval: 86400
+  hulu:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/hulu.mrs
+    path: ./ruleset/hulu.mrs
+    interval: 86400
+  disney:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/disney.mrs
+    path: ./ruleset/disney.mrs
+    interval: 86400
+  hbo:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/hbo.mrs
+    path: ./ruleset/hbo.mrs
+    interval: 86400
+  amazon:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/amazon.mrs
+    path: ./ruleset/amazon.mrs
+    interval: 86400
+  bahamut:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/bahamut.mrs
+    path: ./ruleset/bahamut.mrs
+    interval: 86400
+  steam:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/steam.mrs
+    path: ./ruleset/steam.mrs
+    interval: 86400
+  epicgames:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/epicgames.mrs
+    path: ./ruleset/epicgames.mrs
+    interval: 86400
+  ea:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/ea.mrs
+    path: ./ruleset/ea.mrs
+    interval: 86400
+  ubisoft:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/ubisoft.mrs
+    path: ./ruleset/ubisoft.mrs
+    interval: 86400
+  blizzard:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/blizzard.mrs
+    path: ./ruleset/blizzard.mrs
+    interval: 86400
+  coursera:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/coursera.mrs
+    path: ./ruleset/coursera.mrs
+    interval: 86400
+  edx:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/edx.mrs
+    path: ./ruleset/edx.mrs
+    interval: 86400
+  udemy:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/udemy.mrs
+    path: ./ruleset/udemy.mrs
+    interval: 86400
+  khanacademy:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/khanacademy.mrs
+    path: ./ruleset/khanacademy.mrs
+    interval: 86400
+  category-scholar-!cn:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-scholar-!cn.mrs
+    path: ./ruleset/category-scholar-!cn.mrs
+    interval: 86400
+  paypal:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/paypal.mrs
+    path: ./ruleset/paypal.mrs
+    interval: 86400
+  visa:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/visa.mrs
+    path: ./ruleset/visa.mrs
+    interval: 86400
+  mastercard:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/mastercard.mrs
+    path: ./ruleset/mastercard.mrs
+    interval: 86400
+  stripe:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/stripe.mrs
+    path: ./ruleset/stripe.mrs
+    interval: 86400
+  wise:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/wise.mrs
+    path: ./ruleset/wise.mrs
+    interval: 86400
+  aws:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/aws.mrs
+    path: ./ruleset/aws.mrs
+    interval: 86400
+  azure:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/azure.mrs
+    path: ./ruleset/azure.mrs
+    interval: 86400
+  digitalocean:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/digitalocean.mrs
+    path: ./ruleset/digitalocean.mrs
+    interval: 86400
+  heroku:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/heroku.mrs
+    path: ./ruleset/heroku.mrs
+    interval: 86400
+  dropbox:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/dropbox.mrs
+    path: ./ruleset/dropbox.mrs
+    interval: 86400
+  geolocation-!cn:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-!cn.mrs
+    path: ./ruleset/geolocation-!cn.mrs
+    interval: 86400
+  private:
+    type: http
+    format: mrs
+    behavior: ipcidr
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.mrs
+    path: ./ruleset/private.mrs
+    interval: 86400
+  telegram:
+    type: http
+    format: mrs
+    behavior: ipcidr
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.mrs
+    path: ./ruleset/telegram.mrs
+    interval: 86400
+
+# =========================
+# 规则
+# =========================
+rules:
+  - DOMAIN-SUFFIX,glacier.top,DIRECT
+  - RULE-SET,category-ads-all,🛑 广告拦截
+  - RULE-SET,private,🏠 私有网络,no-resolve
+  - RULE-SET,geolocation-cn,🔒 国内服务
+  - RULE-SET,cn,🔒 国内服务,no-resolve
+  - RULE-SET,category-ai-!cn,💬 AI 服务
+  - RULE-SET,bilibili,📺 哔哩哔哩
+  - RULE-SET,google,🔍 谷歌服务,no-resolve
+  - RULE-SET,youtube,📹 油管视频
+  - RULE-SET,github,🐱 Github
+  - RULE-SET,gitlab,🐱 Github
+  - RULE-SET,microsoft,Ⓜ️ 微软服务
+  - RULE-SET,apple,🍏 苹果服务
+  - RULE-SET,telegram,📲 电报消息,no-resolve
+  - RULE-SET,facebook,🌐 社交媒体
+  - RULE-SET,instagram,🌐 社交媒体
+  - RULE-SET,twitter,🌐 社交媒体
+  - RULE-SET,tiktok,🌐 社交媒体
+  - RULE-SET,linkedin,🌐 社交媒体
+
+  - RULE-SET,netflix,🎬 流媒体
+  - RULE-SET,hulu,🎬 流媒体
+  - RULE-SET,disney,🎬 流媒体
+  - RULE-SET,hbo,🎬 流媒体
+  - RULE-SET,amazon,🎬 流媒体
+  - RULE-SET,bahamut,🎬 流媒体
+
+  - RULE-SET,steam,🎮 游戏平台
+  - RULE-SET,epicgames,🎮 游戏平台
+  - RULE-SET,ea,🎮 游戏平台
+  - RULE-SET,ubisoft,🎮 游戏平台
+  - RULE-SET,blizzard,🎮 游戏平台
+  - RULE-SET,coursera,📚 教育资源
+  - RULE-SET,edx,📚 教育资源
+  - RULE-SET,udemy,📚 教育资源
+  - RULE-SET,khanacademy,📚 教育资源
+  - RULE-SET,category-scholar-!cn,📚 教育资源
+  - RULE-SET,paypal,💰 金融服务
+  - RULE-SET,visa,💰 金融服务
+  - RULE-SET,mastercard,💰 金融服务
+  - RULE-SET,stripe,💰 金融服务
+  - RULE-SET,wise,💰 金融服务
+  - RULE-SET,aws,☁️ 云服务
+  - RULE-SET,azure,☁️ 云服务
+  - RULE-SET,digitalocean,☁️ 云服务
+  - RULE-SET,heroku,☁️ 云服务
+  - RULE-SET,dropbox,☁️ 云服务
+
+  - RULE-SET,geolocation-!cn,🌐 非中国,no-resolve
+  - MATCH,🐟 漏网之鱼
+# =========================
+# TUN 强制接管模式
+# =========================
+tun:
+  enable: false
+  stack: gvisor
+  device: utun
+  endpoint-independent-nat: true
+  auto-route: false
+  auto-detect-interface: false
+  auto-redirect: false
+  strict-route: false
+  dns-hijack:
+    - any:53
+
+# =========================
+# DNS 极限防泄露配置
+# =========================
+dns:
+  enable: true
+  prefer-h3: false
+  ipv6: false
+  use-hosts: true
+  use-system-hosts: false
+  respect-rules: true
+
+  cache-algorithm: arc
+  cache-max-size: 8192
+
+  listen: 127.0.0.1:7874
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-ttl: 300
+
+  fake-ip-filter:
+    # 局域网域名
+    - "*.lan"
+    - "*.local"
+    - "*.localdomain"
+    - "*.home.arpa"
+    # QQ 本地认证
+    - "localhost.ptlogin2.qq.com"
+    - "localhost.sec.qq.com"
+    # STUN
+    - "stun.*"
+    # NTP / 时间同步
+    - "time.*"
+    - "*.ntp.org"
+    - "*.ntp.org.cn"
+    - "*.time.edu.cn"
+    # Microsoft 连通性检测
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    # 你的自定义域
+    - "*.glacier.top"
+    # 机场
+    - "*.ali66mysql.com"
+
+  # 启动阶段解析
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+
+  # 主 DNS（国内）
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
+  # 国外 DNS
+  fallback:
+    - https://1.1.1.1/dns-query
+    - https://8.8.8.8/dns-query
+    - tls://1.1.1.1
+    - tls://8.8.8.8
+
+  # 解析 代理服务器域名
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
+  # 性能关键：域名级精准分流
+  nameserver-policy:
+    "geosite:cn":
+      - https://dns.alidns.com/dns-query
+      - https://doh.pub/dns-query
+    "geosite:geolocation-!cn":
+      - https://1.1.1.1/dns-query
+      - https://8.8.8.8/dns-query
+      - tls://1.1.1.1
+      - tls://8.8.8.8
+
+  # fallback 仅作为保险
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+      - 0.0.0.0/32
