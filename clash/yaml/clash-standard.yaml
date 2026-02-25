@@ -280,10 +280,10 @@ geo-auto-update: true
 geodata-loader: standard
 geo-update-interval: 24
 geox-url:
-  geoip: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
-  geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
-  mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
-  asn: https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb
+  geoip: https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
+  geosite: https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
+  mmdb: https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/lite/Country.mmdb
+  asn: https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb
 
 # =========================
 # 规则集获取
@@ -555,6 +555,8 @@ rules:
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🎯 全球直连
   - RULE-SET,cn,🎯 全球直连,no-resolve
+  - GEOSITE,cn,🎯 全球直连
+  - GEOIP,cn,🎯 全球直连
 
   - RULE-SET,category-ai-!cn,💬 AI 服务
   - RULE-SET,tiktok,🌐 TikTok
