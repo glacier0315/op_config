@@ -288,376 +288,263 @@ geox-url:
 # =========================
 # 规则集获取
 # =========================
+### 规则配置
+# rule_provider_classical: &rule_provider_classical
+#   type: http
+#   format: yaml
+#   behavior: classical
+#   interval: 86400
+
+rule_provider_domain: &rule_provider_domain
+  type: http
+  format: yaml
+  behavior: domain
+  interval: 86400
+
+rule_provider_ipcidr: &rule_provider_ipcidr
+  type: http
+  format: yaml
+  behavior: ipcidr
+  interval: 86400
+
+rule_provider_text: &rule_provider_text
+  type: http
+  format: text
+  behavior: domain
+  interval: 86400
+
 rule-providers:
   fake_ip_filter:
-    type: http
-    format: text
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://raw.githubusercontent.com/DustinWin/ShellCrash/refs/heads/dev/public/fake_ip_filter.list
     path: ./rule_provider/fake_ip_filter.list
-    interval: 86400
+    <<: *rule_provider_text
   category-ads-all:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ads-all.yaml
     path: ./rule_provider/category-ads-all.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   category-ai-!cn:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.yaml
     path: ./rule_provider/category-ai-!cn.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   bilibili:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/bilibili.yaml
     path: ./rule_provider/bilibili.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   youtube:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/youtube.yaml
     path: ./rule_provider/youtube.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   geolocation-cn:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-cn.yaml
     path: ./rule_provider/geolocation-cn.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   github:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/github.yaml
     path: ./rule_provider/github.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   gitlab:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/gitlab.yaml
     path: ./rule_provider/gitlab.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   microsoft:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/microsoft.yaml
     path: ./rule_provider/microsoft.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   apple:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/apple.yaml
     path: ./rule_provider/apple.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   facebook:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/facebook.yaml
     path: ./rule_provider/facebook.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   instagram:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/instagram.yaml
     path: ./rule_provider/instagram.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   twitter:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/twitter.yaml
     path: ./rule_provider/twitter.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   tiktok:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/tiktok.yaml
     path: ./rule_provider/tiktok.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   linkedin:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/linkedin.yaml
     path: ./rule_provider/linkedin.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   netflix:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/netflix.yaml
     path: ./rule_provider/netflix.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   hulu:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/hulu.yaml
     path: ./rule_provider/hulu.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   disney:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/disney.yaml
     path: ./rule_provider/disney.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   hbo:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/hbo.yaml
     path: ./rule_provider/hbo.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   amazon:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/amazon.yaml
     path: ./rule_provider/amazon.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   bahamut:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/bahamut.yaml
     path: ./rule_provider/bahamut.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   steam:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/steam.yaml
     path: ./rule_provider/steam.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   epicgames:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/epicgames.yaml
     path: ./rule_provider/epicgames.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   ea:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/ea.yaml
     path: ./rule_provider/ea.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   ubisoft:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/ubisoft.yaml
     path: ./rule_provider/ubisoft.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   blizzard:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/blizzard.yaml
     path: ./rule_provider/blizzard.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   coursera:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/coursera.yaml
     path: ./rule_provider/coursera.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   edx:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/edx.yaml
     path: ./rule_provider/edx.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   udemy:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/udemy.yaml
     path: ./rule_provider/udemy.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   khanacademy:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/khanacademy.yaml
     path: ./rule_provider/khanacademy.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   category-scholar-!cn:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-scholar-!cn.yaml
     path: ./rule_provider/category-scholar-!cn.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   paypal:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/paypal.yaml
     path: ./rule_provider/paypal.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   visa:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/visa.yaml
     path: ./rule_provider/visa.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   mastercard:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/mastercard.yaml
     path: ./rule_provider/mastercard.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   stripe:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/stripe.yaml
     path: ./rule_provider/stripe.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   wise:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/wise.yaml
     path: ./rule_provider/wise.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   aws:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/aws.yaml
     path: ./rule_provider/aws.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   azure:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/azure.yaml
     path: ./rule_provider/azure.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   digitalocean:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/digitalocean.yaml
     path: ./rule_provider/digitalocean.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   heroku:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/heroku.yaml
     path: ./rule_provider/heroku.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   dropbox:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/dropbox.yaml
     path: ./rule_provider/dropbox.yaml
-    interval: 86400
+    <<: *rule_provider_domain
   geolocation-!cn:
-    type: http
-    format: yaml
-    behavior: domain
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-!cn.yaml
     path: ./rule_provider/geolocation-!cn.yaml
-    interval: 86400
+    <<: *rule_provider_domain
 
   private:
-    type: http
-    format: yaml
-    behavior: ipcidr
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/private.yaml
     path: ./rule_provider/ipcidr_private.yaml
-    interval: 86400
+    <<: *rule_provider_ipcidr
   google:
-    type: http
-    format: yaml
-    behavior: ipcidr
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/google.yaml
     path: ./rule_provider/ipcidr_google.yaml
-    interval: 86400
+    <<: *rule_provider_ipcidr
   telegram:
-    type: http
-    format: yaml
-    behavior: ipcidr
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/telegram.yaml
     path: ./rule_provider/ipcidr_telegram.yaml
-    interval: 86400
+    <<: *rule_provider_ipcidr
   cn:
-    type: http
-    format: yaml
-    behavior: ipcidr
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geoip/cn.yaml
     path: ./rule_provider/ipcidr_cn.yaml
-    interval: 86400
+    <<: *rule_provider_ipcidr
 
 # =========================
 # 规则
