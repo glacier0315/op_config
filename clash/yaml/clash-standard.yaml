@@ -293,6 +293,14 @@ rule-providers:
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-cn.mrs
     path: ./rule_provider/geolocation-cn.mrs
     interval: 86400
+  cn-domain:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs
+    path: ./rule_provider/cn-domain.mrs
+    interval: 86400
 
   facebook:
     type: http
@@ -473,6 +481,7 @@ rules:
   - RULE-SET,category-ads-all,🛑 广告拦截
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🎯 全球直连
+  - RULE-SET,cn-domain,🎯 全球直连
   - RULE-SET,cn,🎯 全球直连,no-resolve
 
   - RULE-SET,category-ai-!cn,💬 AI 服务
@@ -607,7 +616,7 @@ dns:
 #     type: mixed
 #     listen: 0.0.0.0
 #     port: 42003
-#     proxy: 🚀 印尼-链式出口
+#     proxy: 🚀 链式出口
 #     udp: true
 #   - name: mixed4
 #     type: mixed
