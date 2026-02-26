@@ -301,6 +301,7 @@ rule-providers:
 # =========================
 rules:
   - DOMAIN-SUFFIX,glacier.top,DIRECT
+  - DOMAIN-SUFFIX,glacier.de5.net,DIRECT
   - RULE-SET,category-ads-all,🛑 广告拦截
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🎯 全球直连
@@ -347,6 +348,7 @@ dns:
     - rule-set:fake_ip_filter
     # 自定义域名
     - "+.glacier.top"
+    - "+.glacier.de5.net"
     # 机场
     - "*.ali66mysql.com"
 
