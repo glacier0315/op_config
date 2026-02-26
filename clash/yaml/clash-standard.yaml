@@ -55,19 +55,6 @@ external-controller: 0.0.0.0:9090
 secret: "1234456"
 
 # =========================
-# 端口监听配置（可选）
-# 例如：
-#  - Steam 强制美区
-#  - TikTok 强制台湾
-#  - ChatGPT 强制美国
-# =========================
-# listeners:
-#   - { name: mixed0, type: mixed, port: 42000, proxy: 🚀 新加坡 }
-#   - { name: mixed1, type: mixed, port: 42001, proxy: 🚀 香港 }
-#   - { name: mixed2, type: mixed, port: 42002, proxy: 🚀 台湾 }
-#   - { name: mixed3, type: mixed, port: 42002, proxy: 🚀 印尼 }
-
-# =========================
 # 配置文件管理
 # =========================
 profile:
@@ -789,3 +776,28 @@ dns:
       - "+.github.com"
     geosite:
       - gfw
+
+# =========================
+# 端口监听配置（可选）
+# 例如：
+#  - Steam 强制美区
+#  - TikTok 强制台湾
+#  - ChatGPT 强制美国
+# =========================
+# listeners:
+#   - name: mixed0
+#     type: mixed
+#     port: 42000
+#     proxy: 🚀 新加坡
+#   - name: mixed1
+#     type: mixed
+#     port: 42001
+#     proxy: 🚀 香港
+#   - name: mixed2
+#     type: mixed
+#     port: 42002
+#     proxy: 🚀 台湾
+#   - name: mixed3
+#     type: mixed
+#     port: 42002
+#     proxy: 🚀 链式出口
