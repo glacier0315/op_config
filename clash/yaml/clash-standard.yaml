@@ -280,9 +280,9 @@ geo-auto-update: true
 geodata-loader: standard
 geo-update-interval: 24
 geox-url:
-  geoip: https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat
-  geosite: https://testingcf.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat
-  mmdb: https://testingcf.jsdelivr.net/gh/alecthw/mmdb_china_ip_list@release/lite/Country.mmdb
+  geoip: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geoip.dat
+  geosite: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/geosite.dat
+  mmdb: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/country.mmdb
   asn: https://testingcf.jsdelivr.net/gh/xishang0128/geoip@release/GeoLite2-ASN.mmdb
 
 # =========================
@@ -555,8 +555,6 @@ rules:
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🎯 全球直连
   - RULE-SET,cn,🎯 全球直连,no-resolve
-  - GEOSITE,cn,🎯 全球直连
-  - GEOIP,cn,🎯 全球直连
 
   - RULE-SET,category-ai-!cn,💬 AI 服务
   - RULE-SET,tiktok,🌐 TikTok
@@ -608,18 +606,17 @@ rules:
 # TUN 强制接管模式
 # =========================
 tun:
-  enable: false
+  enable: true
   stack: gvisor
   auto-route: true
   auto-detect-interface: true
   auto-redirect: true
-  strict-route: false
+  strict-route: true
   dns-hijack:
     - any:53
-    - tcp://any:53
 
 # =========================
-# DNS 极限防泄露配置
+# DNS 配置
 # =========================
 dns:
   enable: true
@@ -630,7 +627,7 @@ dns:
   respect-rules: true
 
   cache-algorithm: arc
-  cache-max-size: 8192
+  cache-max-size: 4096
 
   listen: 0.0.0.0:7874
   enhanced-mode: fake-ip
@@ -640,43 +637,35 @@ dns:
 
   fake-ip-filter:
     - rule-set:fake_ip_filter
-    # 你的自定义域
+    # 自定义域名
     - "+.glacier.top"
     # 机场
     - "*.ali66mysql.com"
 
-  # 启动阶段解析
+  # 保证直连域名只走 direct-nameserver / nameserver，不被 fallback 干扰
+  direct-nameserver-follow-policy: false
+
+  # 仅用于解析 DNS 服务器域名（防死循环）
   default-nameserver:
-    - tls://1.1.1.1
-    - tls://8.8.8.8
+    - 223.5.5.5
+    - 119.29.29.29
+    - 8.8.8.8
+    - 1.1.1.1
 
-  # 主 DNS
+  # 全局默认加密 DNS
   nameserver:
-    - https://dns.cloudflare.com/dns-query
-    - https://dns.google/dns-query
-    - tls://one.one.one.one
-    - tls://dns.google
+    - https://dns.alidns.com/dns-query#h3=true
+    - https://doh.pub/dns-query
 
-  # 解析 代理服务器域名
+  # 代理节点专属 DNS（核心：防解析死循环）
   proxy-server-nameserver:
-    - https://dns.alidns.com/dns-query
+    - https://dns.alidns.com/dns-query#h3=true
     - https://doh.pub/dns-query
-    - tls://dns.alidns.com
-    - tls://dot.pub
-
-  # 解析 直连域名
-  direct-nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://doh.pub/dns-query
-    - tls://dns.alidns.com
-    - tls://dot.pub
 
   # fallback 仅作为保险
   fallback:
     - https://dns.cloudflare.com/dns-query
     - https://dns.google/dns-query
-    - tls://one.one.one.one
-    - tls://dns.google
 
   fallback-filter:
     geoip: true
@@ -684,3 +673,7 @@ dns:
     ipcidr:
       - 240.0.0.0/4
       - 0.0.0.0/32
+    domain:
+      - "+.github.com"
+    geosite:
+      - gfw
