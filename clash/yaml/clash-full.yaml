@@ -164,22 +164,23 @@ proxy-groups:
     proxies: *Proxies-select
 
   - type: select
-    name: 💬 AI 服务
+    name: 🏠 私有网络
+    proxies: *Proxies-select
+  - type: select
+    name: 🎯 全球直连
     proxies: *Proxies-select
   - type: select
     name: 📺 哔哩哔哩
+    proxies: *Proxies-select
+
+  - type: select
+    name: 💬 AI 服务
     proxies: *Proxies-select
   - type: select
     name: 📹 油管视频
     proxies: *Proxies-select
   - type: select
     name: 🔍 谷歌服务
-    proxies: *Proxies-select
-  - type: select
-    name: 🏠 私有网络
-    proxies: *Proxies-select
-  - type: select
-    name: 🎯 全球直连
     proxies: *Proxies-select
   - type: select
     name: 📲 电报消息
@@ -221,11 +222,18 @@ proxy-groups:
     name: 🐟 漏网之鱼
     proxies: *Proxies-select
 
-  # 香港组
+    # 香港组
   - name: 🚀 香港
     <<: *LoadBalance
     hidden: false
     filter: "(?=.*(广港|香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
+
+  # 新加坡组
+  - name: 🚀 新加坡
+    <<: *LoadBalance
+    hidden: false
+    filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
+    exclude-filter: "(?=.*(新加坡1|VIP1|vip1)).*$"
 
   # 台湾组
   - name: 🚀 台湾
@@ -236,28 +244,21 @@ proxy-groups:
 
   # 日本组
   - name: 🚀 日本
-    type: select
-    include-all: true
-    filter: "(?=.*(广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan)).*$"
-
-  # 新加坡组
-  - name: 🚀 新加坡
-    <<: *LoadBalance
+    <<: *FallBack
     hidden: false
-    filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
-    exclude-filter: "(?=.*(新加坡1|VIP1|vip1)).*$"
+    filter: "(?=.*(广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan)).*$"
 
   # 美国组
   - name: 🚀 美国
-    type: select
-    include-all: true
+    <<: *FallBack
+    hidden: false
     filter: "(?=.*(广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"
 
   # 其他组
   - name: 🚀 其他
     type: select
     include-all: true
-    filter: "^((?!(直连|DIRECT|拒绝|REJECT|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).)*$"
+    filter: "^((?!(直连|DIRECT|拒绝|REJECT|链式|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).)*$"
 
 # =========================
 # Geo 数据获取
