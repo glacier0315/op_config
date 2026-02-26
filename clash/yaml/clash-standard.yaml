@@ -787,17 +787,31 @@ dns:
 # listeners:
 #   - name: mixed0
 #     type: mixed
+#     listen: 0.0.0.0
 #     port: 42000
 #     proxy: 🚀 新加坡
+#     udp: true
 #   - name: mixed1
 #     type: mixed
+#     listen: 0.0.0.0
 #     port: 42001
 #     proxy: 🚀 香港
+#     udp: true
 #   - name: mixed2
 #     type: mixed
+#     listen: 0.0.0.0
 #     port: 42002
 #     proxy: 🚀 台湾
+#     udp: true
 #   - name: mixed3
 #     type: mixed
+#     listen: 0.0.0.0
 #     port: 42003
-#     proxy: 🚀 链式出口
+#     proxy: 🚀 印尼-链式出口
+#     udp: true
+#   - name: mixed4
+#     type: mixed
+#     listen: 0.0.0.0
+#     port: 42004
+#     proxy: DIRECT
+#     udp: true
