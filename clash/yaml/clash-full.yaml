@@ -118,21 +118,37 @@ LoadBalance: &LoadBalance
   hidden: true
   include-all: true
 
+Base-proxies: &Base-proxies
+  - ⚡ 自动选择
+  - 🖐️ 手动切换
+  - 🚀 香港
+  - 🚀 台湾
+  - 🚀 日本
+  - 🚀 新加坡
+  - 🚀 美国
+  - 🚀 其他
+  # - 🚀 链式出口
+  - DIRECT
+  - REJECT
+
+Proxies-select: &Proxies-select
+  - 🚀 节点选择
+  - ⚡ 自动选择
+  - 🖐️ 手动切换
+  - 🚀 香港
+  - 🚀 台湾
+  - 🚀 日本
+  - 🚀 新加坡
+  - 🚀 美国
+  - 🚀 其他
+  # - 🚀 链式出口
+  - DIRECT
+  - REJECT
+
 proxy-groups:
   - name: 🚀 节点选择
     type: select
-    proxies:
-      - ⚡ 自动选择
-      - 🖐️ 手动切换
-      - 🚀 香港
-      - 🚀 台湾
-      - 🚀 日本
-      - 🚀 新加坡
-      - 🚀 美国
-      - 🚀 其他
-      # - 🚀 链式出口
-      - DIRECT
-      - REJECT
+    proxies: *Base-proxies
 
   - name: ⚡ 自动选择
     <<: *UrlTest
@@ -145,77 +161,65 @@ proxy-groups:
 
   - type: select
     name: 🛑 广告拦截
-    proxies: &node-select-proxies
-      - 🚀 节点选择
-      - ⚡ 自动选择
-      - 🖐️ 手动切换
-      - 🚀 香港
-      - 🚀 台湾
-      - 🚀 日本
-      - 🚀 新加坡
-      - 🚀 美国
-      - 🚀 其他
-      # - 🚀 链式出口
-      - DIRECT
-      - REJECT
+    proxies: *Proxies-select
 
   - type: select
     name: 💬 AI 服务
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 📺 哔哩哔哩
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 📹 油管视频
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🔍 谷歌服务
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🏠 私有网络
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🎯 全球直连
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 📲 电报消息
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🐱 Github
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: Ⓜ️ 微软服务
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🍏 苹果服务
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🌐 TikTok
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🌐 社交媒体
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🎬 流媒体
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🎮 游戏平台
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 📚 教育资源
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 💰 金融服务
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: ☁️ 云服务
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🌐 全球代理
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
   - type: select
     name: 🐟 漏网之鱼
-    proxies: *node-select-proxies
+    proxies: *Proxies-select
 
   # 香港组
   - name: 🚀 香港
@@ -321,6 +325,14 @@ rule-providers:
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/geolocation-cn.mrs
     path: ./rule_provider/geolocation-cn.mrs
+    interval: 86400
+  cn-domain:
+    type: http
+    format: mrs
+    behavior: domain
+    url: >-
+      https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/cn.mrs
+    path: ./rule_provider/cn-domain.mrs
     interval: 86400
 
   github:
@@ -653,6 +665,7 @@ rules:
   - RULE-SET,category-ads-all,🛑 广告拦截
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🎯 全球直连
+  - RULE-SET,cn-domain,🎯 全球直连
   - RULE-SET,cn,🎯 全球直连,no-resolve
 
   - RULE-SET,category-ai-!cn,💬 AI 服务
@@ -807,7 +820,7 @@ dns:
 #     type: mixed
 #     listen: 0.0.0.0
 #     port: 42003
-#     proxy: 🚀 印尼-链式出口
+#     proxy: 🚀 链式出口
 #     udp: true
 #   - name: mixed4
 #     type: mixed
