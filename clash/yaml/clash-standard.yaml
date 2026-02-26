@@ -799,5 +799,5 @@ dns:
 #     proxy: 🚀 台湾
 #   - name: mixed3
 #     type: mixed
-#     port: 42002
+#     port: 42003
 #     proxy: 🚀 链式出口
