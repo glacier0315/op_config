@@ -619,8 +619,8 @@ rules:
 # TUN 强制接管模式
 # =========================
 tun:
-  enable: true
-  stack: gvisor
+  enable: false
+  stack: mixed
   auto-route: true
   auto-detect-interface: true
   auto-redirect: true

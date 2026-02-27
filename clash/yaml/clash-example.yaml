@@ -635,7 +635,7 @@ rules:
 # =========================
 tun:
   enable: false
-  stack: gvisor
+  stack: mixed
   # 配置路由表
   auto-route: true
   # 自动识别出口网卡
