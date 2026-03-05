@@ -41,6 +41,8 @@ proxy-providers:
 # =========================
 mixed-port: 7890
 allow-lan: true
+# 绑定 IP 地址，仅作用于 allow-lan 为 true，'*'表示所有地址
+bind-address: "*"
 # Clash 路由工作模式
 # rule: 基于规则的数据包路由
 # global: 所有数据包将被转发到单个节点
@@ -90,82 +92,84 @@ proxies:
 # - domain-strategy: ipv4-only 强制仅使用 IPv4
 # =========================
 
-### 策略组基础配置
-Select: &Select
-  type: select
-  url: "https://www.gstatic.com/generate_204"
-  disable-udp: false
-  hidden: false
-  include-all: true
+# 策略组基础配置
+proxy-groups-anchor:
+  Select: &Select
+    type: select
+    url: "https://www.gstatic.com/generate_204"
+    disable-udp: false
+    hidden: false
+    include-all: true
 
-UrlTest: &UrlTest
-  type: url-test
-  url: "https://www.gstatic.com/generate_204"
-  interval: 180
-  lazy: true
-  tolerance: 50
-  timeout: 2000
-  disable-udp: false
-  max-failed-times: 3
-  hidden: false
-  include-all: true
+  UrlTest: &UrlTest
+    type: url-test
+    url: "https://www.gstatic.com/generate_204"
+    interval: 180
+    lazy: true
+    tolerance: 50
+    timeout: 2000
+    disable-udp: false
+    max-failed-times: 3
+    hidden: false
+    include-all: true
 
-FallBack: &FallBack
-  type: fallback
-  url: "https://www.gstatic.com/generate_204"
-  interval: 180
-  lazy: true
-  timeout: 2000
-  disable-udp: false
-  max-failed-times: 3
-  hidden: false
-  include-all: true
+  FallBack: &FallBack
+    type: fallback
+    url: "https://www.gstatic.com/generate_204"
+    interval: 180
+    lazy: true
+    timeout: 2000
+    disable-udp: false
+    max-failed-times: 3
+    hidden: false
+    include-all: true
 
-LoadBalance: &LoadBalance
-  type: load-balance
-  url: "https://www.gstatic.com/generate_204"
-  interval: 180
-  lazy: true
-  disable-udp: false
-  strategy: consistent-hashing
-  timeout: 2000
-  max-failed-times: 3
-  hidden: false
-  include-all: true
+  LoadBalance: &LoadBalance
+    type: load-balance
+    url: "https://www.gstatic.com/generate_204"
+    interval: 180
+    lazy: true
+    disable-udp: false
+    # 可选 round-robin 和 sticky-sessions
+    strategy: consistent-hashing
+    timeout: 2000
+    max-failed-times: 3
+    hidden: false
+    include-all: true
 
-### 代理列表锚点
-Base-proxies: &Base-proxies
-  - ⚡ 自动选择
-  - 🖐️ 手动切换
-  - 🚀 香港
-  - 🚀 台湾
-  - 🚀 日本
-  - 🚀 新加坡
-  - 🚀 美国
-  - 🚀 其他
-  # - 🚀 链式出口
-  - DIRECT
-  - REJECT
+  ### 代理列表锚点
+  Base-proxies: &Base-proxies
+    - ⚡ 自动选择
+    - 🖐️ 手动切换
+    - 🚀 香港
+    - 🚀 台湾
+    - 🚀 日本
+    - 🚀 新加坡
+    - 🚀 美国
+    - 🚀 其他
+    # - 🚀 链式出口
+    - DIRECT
+    - REJECT
 
-### 扩展代理列表（含节点选择）
-Proxies-select: &Proxies-select
-  - 🚀 节点选择
-  - ⚡ 自动选择
-  - 🖐️ 手动切换
-  - 🚀 香港
-  - 🚀 台湾
-  - 🚀 日本
-  - 🚀 新加坡
-  - 🚀 美国
-  - 🚀 其他
-  # - 🚀 链式出口
-  - DIRECT
-  - REJECT
+  ### 扩展代理列表（含节点选择）
+  Proxies-select: &Proxies-select
+    - 🚀 节点选择
+    - ⚡ 自动选择
+    - 🖐️ 手动切换
+    - 🚀 香港
+    - 🚀 台湾
+    - 🚀 日本
+    - 🚀 新加坡
+    - 🚀 美国
+    - 🚀 其他
+    # - 🚀 链式出口
+    - DIRECT
+    - REJECT
 
-### 通用功能组配置
-Function-group-config: &Function-group-config
-  type: select
-  proxies: *Proxies-select
+  ### 通用功能组配置
+  Function-group-config: &Function-group-config
+    type: select
+    proxies: *Proxies-select
 
 proxy-groups:
   # 节点选择组
@@ -259,6 +263,17 @@ proxy-groups:
     include-all: true
     filter: "^((?!(直连|DIRECT|拒绝|REJECT|链式|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广美|US|美国|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|🇺🇸|United States)).)*$"
 
+  # # 代理链，目前 relay 可以支持 udp 的只有 vmess/vless/trojan/ss/ssr/tuic
+  # # wireguard 目前不支持在 relay 中使用，请使用 proxy 中的 dialer-proxy 配置项
+  # # Traffic: mihomo <-> http <-> vmess <-> ss1 <-> ss2 <-> Internet
+  # - name: "relay"
+  #   type: relay
+  #   proxies:
+  #     - http
+  #     - vmess
+  #     - ss1
+  #     - ss2
+
 # =========================
 # Geo 数据获取
 # =========================
@@ -275,25 +290,26 @@ geox-url:
 # =========================
 # 规则集获取
 # =========================
-# 定义通用锚点
-BaseHTTP: &BaseHTTP
-  type: http
-  interval: 86400
+# 定义锚点
+rule-providers-anchor:
+  BaseHTTP: &BaseHTTP
+    type: http
+    interval: 86400
 
-DomainMRS: &DomainMRS
-  <<: *BaseHTTP
-  format: mrs
-  behavior: domain
+  DomainMRS: &DomainMRS
+    <<: *BaseHTTP
+    format: mrs
+    behavior: domain
 
-IpcidrMRS: &IpcidrMRS
-  <<: *BaseHTTP
-  format: mrs
-  behavior: ipcidr
+  IpcidrMRS: &IpcidrMRS
+    <<: *BaseHTTP
+    format: mrs
+    behavior: ipcidr
 
-DomainText: &DomainText
-  <<: *BaseHTTP
-  format: text
-  behavior: domain
+  DomainText: &DomainText
+    <<: *BaseHTTP
+    format: text
+    behavior: domain
 
 # 正式规则
 rule-providers:
@@ -635,6 +651,7 @@ rules:
 # =========================
 tun:
   enable: false
+  # system/gvisor/mixed
   stack: mixed
   # 配置路由表
   auto-route: true
@@ -654,6 +671,7 @@ tun:
 # =========================
 dns:
   enable: true
+  # 是否开启 DoH 支持 HTTP/3，将并发尝试
   prefer-h3: false
   # ipv6: false 将返回 AAAA 的空结果
   ipv6: false
@@ -685,12 +703,13 @@ dns:
   # 保证直连域名只走 direct-nameserver / nameserver，不被 fallback 干扰
   direct-nameserver-follow-policy: false
 
-  # 仅用于解析 DNS 服务器域名（防死循环）
+  # 用于解析 nameserver，fallback 以及其他 DNS 服务器配置的，DNS 服务域名
+  # 只能使用纯 IP 地址，可使用加密 DNS
   default-nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
-    - tls://1.1.1.1
-    - tls://8.8.8.8
+    - tls://1.12.12.12:853
+    - tls://223.5.5.5:853
+    - tls://1.1.1.1:853
+    - tls://8.8.8.8:853
 
   # 全局默认加密 DNS
   nameserver:
@@ -708,13 +727,17 @@ dns:
     - https://dns.google/dns-query
 
   fallback-filter:
+    # 配置是否使用 geoip
     geoip: true
+    # 当 nameserver 域名的 IP 查询 geoip 库为 CN 时，不使用 fallback 中的 DNS 查询结果
     geoip-code: CN
+    # 如果不匹配 ipcidr 则使用 nameservers 中的结果
     ipcidr:
       - 240.0.0.0/4
       - 0.0.0.0/32
     domain:
       - "+.github.com"
+    # 配置强制 fallback，优先于 IP 判断，具体分类自行查看 geosite 库
     geosite:
       - gfw
 
@@ -725,40 +748,41 @@ dns:
   #   "geosite:category-ads-all": rcode://success
 
 # =========================
+# 流量入站
 # 端口监听配置（可选）
 # 例如：
 #  - Steam 强制美区
 #  - TikTok 强制台湾
 #  - ChatGPT 强制美国
 # =========================
-# listeners:
-#   - name: mixed0
-#     type: mixed
-#     listen: 0.0.0.0
-#     port: 42000
-#     proxy: 🚀 新加坡
-#     udp: true
-#   - name: mixed1
-#     type: mixed
-#     listen: 0.0.0.0
-#     port: 42001
-#     proxy: 🚀 香港
-#     udp: true
-#   - name: mixed2
-#     type: mixed
-#     listen: 0.0.0.0
-#     port: 42002
-#     proxy: 🚀 台湾
-#     udp: true
-#   - name: mixed3
-#     type: mixed
-#     listen: 0.0.0.0
-#     port: 42003
-#     proxy: 🚀 链式出口
-#     udp: true
-#   - name: mixed4
-#     type: mixed
-#     listen: 0.0.0.0
-#     port: 42004
-#     proxy: DIRECT
-#     udp: true
+listeners:
+  - name: mixed-in-1
+    type: mixed
+    listen: 0.0.0.0
+    port: 10811
+    proxy: 🚀 新加坡
+    udp: true
+  - name: mixed-in-2
+    type: mixed
+    listen: 0.0.0.0
+    port: 10812
+    proxy: 🚀 香港
+    udp: true
+  - name: mixed-in-3
+    type: mixed
+    listen: 0.0.0.0
+    port: 10813
+    proxy: 🚀 台湾
+    udp: true
+  - name: mixed-in-4
+    type: mixed
+    listen: 0.0.0.0
+    port: 10814
+    proxy: 🚀 链式出口
+    udp: true
+  - name: mixed-in-5
+    type: mixed
+    listen: 0.0.0.0
+    port: 10815
+    proxy: DIRECT
+    udp: true
