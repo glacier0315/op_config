@@ -182,11 +182,15 @@ proxy-groups:
     <<: *Select
     filter: ^((?!(直连|DIRECT|拒绝|REJECT)).)*$
 
+  # 自动选择组
+  - name: ⚡ 自动选择
+    <<: *UrlTest
+    hidden: false
+    filter: ^((?!(直连|DIRECT|拒绝|REJECT)).)*$
+
   # 功能策略组
   - <<: *Function-group-config
     name: 🛑 广告拦截
-  - <<: *Function-group-config
-    name: 🧪 TEST
 
   - <<: *Function-group-config
     name: 🏠 私有网络
@@ -221,16 +225,14 @@ proxy-groups:
     name: 💹 金融服务
   - <<: *Function-group-config
     name: ☁️ 云服务
+
+  - <<: *Function-group-config
+    name: 🧪 TEST
+
   - <<: *Function-group-config
     name: 🌐 全球代理
   - <<: *Function-group-config
     name: 🎣 漏网之鱼
-
-  # 自动选择组
-  - name: ⚡ 自动选择
-    <<: *UrlTest
-    hidden: false
-    filter: ^((?!(直连|DIRECT|拒绝|REJECT)).)*$
 
   # 地区节点组 - 香港
   - name: 🇭🇰 香港
