@@ -76,13 +76,13 @@ profile:
 
 proxies:
   # 链式代理
-  # - name: 🚀 链式出口
-  #   type: socks5
-  #   server:
-  #   port:
-  #   username:
-  #   password:
-  #   dialer-proxy: 🚀 香港
+  - name: 🚀 链式出口
+    type: socks5
+    server:
+    port:
+    username:
+    password:
+    dialer-proxy: 🚀 香港
 
 # =========================
 # 代理组配置
@@ -147,7 +147,7 @@ proxy-groups-anchor:
     - 🚀 新加坡
     - 🚀 美国
     - 🚀 其他
-    # - 🚀 链式出口
+    - 🚀 链式出口
     - DIRECT
     - REJECT
 
@@ -162,7 +162,7 @@ proxy-groups-anchor:
     - 🚀 新加坡
     - 🚀 美国
     - 🚀 其他
-    # - 🚀 链式出口
+    - 🚀 链式出口
     - DIRECT
     - REJECT
 
@@ -191,6 +191,8 @@ proxy-groups:
   # 功能策略组
   - <<: *Function-group-config
     name: 🛑 广告拦截
+  - <<: *Function-group-config
+    name: 🧪 TEST
 
   - <<: *Function-group-config
     name: 🏠 私有网络
@@ -311,6 +313,11 @@ rule-providers-anchor:
     format: text
     behavior: domain
 
+  ClassicalText: &ClassicalText
+    <<: *BaseHTTP
+    format: text
+    behavior: classical
+
 # 正式规则
 rule-providers:
   fake_ip_filter:
@@ -324,6 +331,12 @@ rule-providers:
     url: >-
       https://gh-proxy.com/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ads-all.mrs
     path: ./rule_provider/category-ads-all.mrs
+
+  check:
+    <<: *ClassicalText
+    url: >-
+      https://gh-proxy.com/https://github.com/liandu2024/clash/raw/refs/heads/main/list/Check.list
+    path: ./rule_provider/check.list
 
   category-ai-!cn:
     <<: *DomainMRS
@@ -596,6 +609,7 @@ rules:
   - DOMAIN-SUFFIX,glacier.top,DIRECT
   - DOMAIN-SUFFIX,glacier.de5.net,DIRECT
   - RULE-SET,category-ads-all,🛑 广告拦截
+  - RULE-SET,check,🧪 TEST
   - RULE-SET,private,🏠 私有网络,no-resolve
   - RULE-SET,geolocation-cn,🎯 全球直连
   - RULE-SET,cn-domain,🎯 全球直连
